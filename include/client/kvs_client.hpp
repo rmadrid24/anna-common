@@ -55,16 +55,16 @@ class KvsClient : public KvsClientInterface {
       socket_cache_(SocketCache(&context_, ZMQ_PUSH)),
       key_address_puller_(zmq::socket_t(context_, ZMQ_PULL)),
       response_puller_(zmq::socket_t(context_, ZMQ_PULL)),
-      log_(spdlog::basic_logger_mt("client_log", "client_log.txt", true)),
+//      log_(spdlog::basic_logger_mt("client_log", "client_log.txt", true)),
       timeout_(timeout) {
     // initialize logger
-    log_->flush_on(spdlog::level::info);
+//    log_->flush_on(spdlog::level::info);
 
     std::hash<string> hasher;
     seed_ = time(NULL);
     seed_ += hasher(ip);
     seed_ += tid;
-    log_->info("Random seed is {}.", seed_);
+//    log_->info("Random seed is {}.", seed_);
 
     // bind the two sockets we listen on
     key_address_puller_.bind(ut_.key_address_bind_address());
@@ -257,8 +257,8 @@ class KvsClient : public KvsClientInterface {
   /**
    * Set the logger used by the client.
    */
-  void set_logger(logger log) { log_ = log; }
-
+  void set_logger(logger log) { log_ = log; log_->info("Random seed is {}.", seed_); }
+  
   /**
    * Clears the key address cache held by this client.
    */
