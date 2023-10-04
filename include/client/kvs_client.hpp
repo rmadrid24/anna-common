@@ -289,8 +289,8 @@ class KvsClient : public KvsClientInterface {
     // tier timed out, which should never happen.
     Key key = request.tuples(0).key();
     Address worker = get_worker_thread(key);
-    log_->info("Request sent to {}",
-                 worker);
+    //log_->info("Request sent to {}",
+    //             worker);
     if (worker.length() == 0) {
       // this means a key addr request is issued asynchronously
       if (pending_request_map_.find(key) == pending_request_map_.end()) {
