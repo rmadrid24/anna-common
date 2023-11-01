@@ -48,7 +48,7 @@ class KvsClient : public KvsClientInterface {
    * @timeout Length of request timeouts in ms
    */
   KvsClient(vector<UserRoutingThread> routing_threads, string ip,
-            unsigned tid = 0, unsigned timeout = 10000) :
+            unsigned tid = 0, unsigned timeout = 10000, unsigned mwtype = 1) :
       routing_threads_(routing_threads),
       ut_(UserThread(ip, tid)),
       context_(zmq::context_t(1)),
@@ -56,7 +56,8 @@ class KvsClient : public KvsClientInterface {
       key_address_puller_(zmq::socket_t(context_, ZMQ_PULL)),
       response_puller_(zmq::socket_t(context_, ZMQ_PULL)),
 //      log_(spdlog::basic_logger_mt("client_log", "client_log.txt", true)),
-      timeout_(timeout) {
+      timeout_(timeout),
+      mwtype_(mwtype) {
     // initialize logger
 //    log_->flush_on(spdlog::level::info);
 
@@ -92,6 +93,7 @@ class KvsClient : public KvsClientInterface {
     request.set_type(RequestType::PUT);
     tuple->set_lattice_type(lattice_type);
     tuple->set_payload(payload);
+    tuple->set_mwtype(mwtype_);
 
     try_request(request);
     return request.request_id();
@@ -105,8 +107,9 @@ class KvsClient : public KvsClientInterface {
     if (pending_get_response_map_.find(key) ==
         pending_get_response_map_.end()) {
       KeyRequest request;
-      prepare_data_request(request, key);
+      KeyTuple* tuple = prepare_data_request(request, key);
       request.set_type(RequestType::GET);
+      tuple->set_mwtype(mwtype_);
 
       try_request(request);
     }
@@ -534,6 +537,9 @@ class KvsClient : public KvsClientInterface {
 
   // keeps track of pending put responses
   map<Key, map<string, PendingRequest>> pending_put_response_map_;
+
+  // interactive or batch type
+  unsigned mwtype_;
 };
 
 #endif  // INCLUDE_ASYNC_CLIENT_HPP_
