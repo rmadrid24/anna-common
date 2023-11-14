@@ -296,6 +296,7 @@ class KvsClient : public KvsClientInterface {
     //             worker);
     if (worker.length() == 0) {
       // this means a key addr request is issued asynchronously
+      log_->info("Could not find a thread responsible for key {}", key);
       if (pending_request_map_.find(key) == pending_request_map_.end()) {
         pending_request_map_[key].first = std::chrono::system_clock::now();
       }
