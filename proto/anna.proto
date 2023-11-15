@@ -49,6 +49,9 @@ enum LatticeType {
 
   // Priority lattice
   PRIORITY = 6;
+
+  // Middleware Lattice Mod
+  LWW_MW = 7;
 }
 
 enum AnnaError {
@@ -83,7 +86,7 @@ message KeyTuple {
 
   // The lattice type for this key. Only required for server responses and PUT
   // requests.
-  LatticeType lattice_type = 2;
+  LatticeType lattice_type = 7;
 
   // The error type specified by the server (see AnnaError).
   AnnaError error = 3;
