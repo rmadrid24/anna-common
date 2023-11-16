@@ -75,6 +75,9 @@ enum AnnaError {
   // This error is returned by the routing tier if no servers are in the
   // cluster.
   NO_SERVERS = 5;
+
+  // This error is returned if mw type is wrong (1=interactive, 2=batch)
+  WRONG_MWTYPE = 6;
 }
 
 // ANNA KVS REQUESTS
@@ -86,7 +89,7 @@ message KeyTuple {
 
   // The lattice type for this key. Only required for server responses and PUT
   // requests.
-  LatticeType lattice_type = 7;
+  LatticeType lattice_type = 2;
 
   // The error type specified by the server (see AnnaError).
   AnnaError error = 3;
@@ -101,6 +104,9 @@ message KeyTuple {
   // A boolean set by the server if the client's address_cache_size does not
   // match the metadata stored by the server.
   bool invalidate = 6;
+
+  // interactive or batch type
+  uint32 mwtype = 7;
 }
 
 // An individual GET or PUT request; each request can batch multiple keys.
